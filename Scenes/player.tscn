@@ -1,0 +1,206 @@
+[gd_scene load_steps=19 format=3 uid="uid://drl7gprsvd4hc"]
+
+[ext_resource type="Script" path="res://Scripts/player.gd" id="1_v1fvr"]
+[ext_resource type="Texture2D" uid="uid://5ek11mdx56oy" path="res://Sprites/player.png" id="2_wk6ak"]
+[ext_resource type="AudioStream" uid="uid://b35jla1ptarch" path="res://Sounds/jump.wav" id="3_52onb"]
+[ext_resource type="AudioStream" uid="uid://gbw0qqi01a5y" path="res://Sounds/hurt.wav" id="4_2rjwv"]
+[ext_resource type="AudioStream" uid="uid://wr5ttt1nldlq" path="res://Sounds/hit.wav" id="5_f6dgp"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mop6y"]
+atlas = ExtResource("2_wk6ak")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rqv10"]
+atlas = ExtResource("2_wk6ak")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xkt2p"]
+atlas = ExtResource("2_wk6ak")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kml7d"]
+atlas = ExtResource("2_wk6ak")
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n2374"]
+atlas = ExtResource("2_wk6ak")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n6jbq"]
+atlas = ExtResource("2_wk6ak")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aso3c"]
+atlas = ExtResource("2_wk6ak")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_gpg5c"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mop6y")
+}],
+"loop": true,
+"name": &"Dash",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rqv10")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xkt2p")
+}],
+"loop": true,
+"name": &"Jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kml7d")
+}],
+"loop": true,
+"name": &"Lose",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n2374")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n6jbq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_aso3c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n6jbq")
+}],
+"loop": true,
+"name": &"Run",
+"speed": 8.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rmad5"]
+size = Vector2(12, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mxfwe"]
+size = Vector2(14, 15)
+
+[sub_resource type="Animation" id="Animation_dexq8"]
+resource_name = "Hurt"
+length = 0.2
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimatedSprite2D:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0.392157)]
+}
+
+[sub_resource type="Animation" id="Animation_172gc"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("AnimatedSprite2D:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("AnimatedSprite2D:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_y2kn6"]
+_data = {
+"Hurt": SubResource("Animation_dexq8"),
+"RESET": SubResource("Animation_172gc")
+}
+
+[node name="Player" type="CharacterBody2D"]
+process_mode = 1
+collision_layer = 2
+script = ExtResource("1_v1fvr")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_gpg5c")
+animation = &"Idle"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1)
+shape = SubResource("RectangleShape2D_rmad5")
+
+[node name="DashTimer" type="Timer" parent="."]
+wait_time = 0.6
+
+[node name="HurtTimer" type="Timer" parent="."]
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_mxfwe")
+
+[node name="JumpSound" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = ExtResource("3_52onb")
+volume_db = 15.0
+
+[node name="HurtSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_2rjwv")
+volume_db = 15.0
+
+[node name="HitSound" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = ExtResource("5_f6dgp")
+volume_db = 15.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_y2kn6")
+}
+
+[connection signal="timeout" from="DashTimer" to="." method="_on_dash_timer_timeout"]
+[connection signal="timeout" from="HurtTimer" to="." method="_on_hurt_timer_timeout"]
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
